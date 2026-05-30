@@ -23,6 +23,8 @@ import {TYPOGRAPHY} from '../../ui/theme/typography';
 
 import busIcon from '../../assets/images/bus.png';
 
+import SearchCard from '../../components/SearchCard';
+
 export default function UserHome() {
 
 const [buses, setBuses] =
@@ -34,6 +36,8 @@ const [buses, setBuses] =
   longitude: 88.3639,
 
   title: 'WB-01A-1234',
+
+   currentStopIndex: 0,
 
   route: [
     'Howrah',
@@ -47,7 +51,10 @@ const [buses, setBuses] =
   id: 2,
   latitude: 22.5826,
   longitude: 88.3739,
+
   title: 'WB-01A-5678',
+
+   currentStopIndex: 0,
 
   route: [
     'Dunlop',
@@ -61,7 +68,10 @@ const [buses, setBuses] =
   id: 3,
   latitude: 22.5626,
   longitude: 88.3539,
+
   title: 'WB-01A-9999',
+
+   currentStopIndex: 0,
 
   route: [
     'Howrah',
@@ -135,19 +145,27 @@ const filteredBuses = searched
 
     setBuses(prevBuses =>
 
-      prevBuses.map(bus => ({
-        ...bus,
+     prevBuses.map(bus => ({
+  ...bus,
 
-        latitude:
-          bus.latitude + (
-            Math.random() * 0.0001
-          ),
+  latitude:
+    bus.latitude + (
+      Math.random() * 0.0001
+    ),
 
-        longitude:
-          bus.longitude + (
-            Math.random() * 0.0001
-          ),
-      })),
+  longitude:
+    bus.longitude + (
+      Math.random() * 0.0001
+    ),
+
+  currentStopIndex:
+    bus.currentStopIndex <
+    bus.route.length - 1
+
+      ? bus.currentStopIndex + 1
+
+      : 0,
+})),
     );
 
   }, 500);
@@ -173,40 +191,19 @@ const filteredBuses = searched
           </Text>
         </View>
 
-        {/* SEARCH CARD */}
-      <View style={styles.card}>
+      <SearchCard
+  from={from}
+  to={to}
+  setFrom={setFrom}
+  setTo={setTo}
+  onSearch={() => {
 
-  <Text style={styles.cardTitle}>
-    Search Route
-  </Text>
+  setSelectedBus(null);
 
-  <TextInput
-    placeholder="From Station"
-    value={from}
-    onChangeText={setFrom}
-    style={styles.searchInput}
-    placeholderTextColor="#999"
-  />
+  setSearched(true);
+}}
+/>
 
-  <TextInput
-    placeholder="To Station"
-    value={to}
-    onChangeText={setTo}
-    style={styles.searchInput}
-    placeholderTextColor="#999"
-  />
-
-  <TouchableOpacity
-  style={styles.searchButton}
-  onPress={() => setSearched(true)}>
-
-  <Text style={styles.searchButtonText}>
-    Search Buses
-  </Text>
-
-</TouchableOpacity>
-
-</View>
 
         {/* MAP */}
         <View style={styles.mapContainer}>
@@ -253,17 +250,39 @@ const filteredBuses = searched
       {selectedBus.title}
     </Text>
 
-    <Text style={styles.liveText}>
-      ETA: 5 mins
-    </Text>
+   <Text style={styles.liveText}>
+  Current Stop:
 
-    <Text style={styles.liveText}>
-      Route: Howrah → Salt Lake
-    </Text>
+  {' '}
+  {
+    selectedBus.route[
+      selectedBus.currentStopIndex
+    ]
+  }
+</Text>
 
-    <Text style={styles.liveText}>
-      Status: On Time
-    </Text>
+<Text style={styles.liveText}>
+  Next Stop:
+
+  {' '}
+  {
+    selectedBus.route[
+      (
+        selectedBus.currentStopIndex + 1
+      ) %
+
+      selectedBus.route.length
+    ]
+  }
+</Text>
+
+<Text style={styles.liveText}>
+  ETA: 5 mins
+</Text>
+
+<Text style={styles.liveText}>
+  Status: On Time
+</Text>
 
   </View>
 
