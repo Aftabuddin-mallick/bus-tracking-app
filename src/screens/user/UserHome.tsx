@@ -18,31 +18,59 @@ import {SPACING} from '../../ui/theme/spacing';
 
 import {TYPOGRAPHY} from '../../ui/theme/typography';
 
+import busIcon from '../../assets/images/bus.png';
+
 export default function UserHome() {
 
-  const [busLocation, setBusLocation] =
-  React.useState({
-    latitude: 22.5726,
-    longitude: 88.3639,
-  });
+const [buses, setBuses] =
+  React.useState([
+    {
+      id: 1,
+      latitude: 22.5726,
+      longitude: 88.3639,
+      title: 'WB-01A-1234',
+    },
 
+    {
+      id: 2,
+      latitude: 22.5826,
+      longitude: 88.3739,
+      title: 'WB-01A-5678',
+    },
+
+    {
+      id: 3,
+      latitude: 22.5626,
+      longitude: 88.3539,
+      title: 'WB-01A-9999',
+    },
+  ]);
    React.useEffect(() => {
 
-    const interval = setInterval(() => {
+  const interval = setInterval(() => {
 
-      setBusLocation(prev => ({
+    setBuses(prevBuses =>
+
+      prevBuses.map(bus => ({
+        ...bus,
+
         latitude:
-          prev.latitude + 0.0005,
+          bus.latitude + (
+            Math.random() * 0.0001
+          ),
 
         longitude:
-          prev.longitude + 0.0005,
-      }));
+          bus.longitude + (
+            Math.random() * 0.0001
+          ),
+      })),
+    );
 
-    }, 3000);
+  }, 500);
 
-    return () => clearInterval(interval);
+  return () => clearInterval(interval);
 
-  }, []);
+}, []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -77,18 +105,27 @@ export default function UserHome() {
 
           <MapView
             style={styles.map}
-              region={{
+              initialRegion={{
               latitude: 22.5726,
               longitude: 88.3639,
               latitudeDelta: 0.05,
               longitudeDelta: 0.05,
             }}>
 
-            <Marker
-             coordinate={busLocation}
-              title="Bus Location"
-              description="Live tracking"
-            />
+            {buses.map(bus => (
+
+          <Marker
+            key={bus.id}
+              coordinate={{
+              latitude: bus.latitude,
+              longitude: bus.longitude,
+            }}
+            title={bus.title}
+            description="Live Bus Tracking"
+            image={busIcon}
+          />
+
+))}
 
           </MapView>
 
