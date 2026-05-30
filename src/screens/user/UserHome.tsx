@@ -20,6 +20,30 @@ import {TYPOGRAPHY} from '../../ui/theme/typography';
 
 export default function UserHome() {
 
+  const [busLocation, setBusLocation] =
+  React.useState({
+    latitude: 22.5726,
+    longitude: 88.3639,
+  });
+
+   React.useEffect(() => {
+
+    const interval = setInterval(() => {
+
+      setBusLocation(prev => ({
+        latitude:
+          prev.latitude + 0.0005,
+
+        longitude:
+          prev.longitude + 0.0005,
+      }));
+
+    }, 3000);
+
+    return () => clearInterval(interval);
+
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
 
@@ -53,7 +77,7 @@ export default function UserHome() {
 
           <MapView
             style={styles.map}
-            initialRegion={{
+              region={{
               latitude: 22.5726,
               longitude: 88.3639,
               latitudeDelta: 0.05,
@@ -61,10 +85,7 @@ export default function UserHome() {
             }}>
 
             <Marker
-              coordinate={{
-                latitude: 22.5726,
-                longitude: 88.3639,
-              }}
+             coordinate={busLocation}
               title="Bus Location"
               description="Live tracking"
             />
@@ -106,6 +127,7 @@ export default function UserHome() {
 
     </SafeAreaView>
   );
+  
 }
 
 const styles = StyleSheet.create({
