@@ -6,6 +6,8 @@ import {
   StyleSheet,
   SafeAreaView,
   ScrollView,
+  TextInput,
+  TouchableOpacity,
 } from 'react-native';
 
 import MapView, {
@@ -25,31 +27,86 @@ export default function UserHome() {
 
 const [buses, setBuses] =
   React.useState([
-    {
-      id: 1,
-      latitude: 22.5726,
-      longitude: 88.3639,
-      title: 'WB-01A-1234',
-    },
+   {
+  id: 1,
 
-    {
-      id: 2,
-      latitude: 22.5826,
-      longitude: 88.3739,
-      title: 'WB-01A-5678',
-    },
+  latitude: 22.5726,
+  longitude: 88.3639,
 
-    {
-      id: 3,
-      latitude: 22.5626,
-      longitude: 88.3539,
-      title: 'WB-01A-9999',
-    },
+  title: 'WB-01A-1234',
+
+  route: [
+    'Howrah',
+    'Park Street',
+    'Sealdah',
+    'Salt Lake',
+  ],
+},
+
+{
+  id: 2,
+  latitude: 22.5826,
+  longitude: 88.3739,
+  title: 'WB-01A-5678',
+
+  route: [
+    'Dunlop',
+    'Shyambazar',
+    'Esplanade',
+    'Salt Lake',
+  ],
+},
+
+  {
+  id: 3,
+  latitude: 22.5626,
+  longitude: 88.3539,
+  title: 'WB-01A-9999',
+
+  route: [
+    'Howrah',
+    'MG Road',
+    'Sealdah',
+    'Airport',
+  ],
+},
   ]);
 
   const [selectedBus, setSelectedBus] =
   React.useState<any>(null);
 
+  const [from, setFrom] =
+  React.useState('');
+
+  const [to, setTo] =
+  React.useState('');
+
+  const [searched, setSearched] =
+  React.useState(false);
+
+  // const [search, setSearch] =
+  // React.useState('');
+
+const filteredBuses = searched
+  ? buses.filter(bus => {
+
+      const routeStops =
+        bus.route.map(stop =>
+          stop.toLowerCase().trim(),
+        );
+
+      return (
+        routeStops.includes(
+          from.toLowerCase().trim(),
+        ) &&
+
+        routeStops.includes(
+          to.toLowerCase().trim(),
+        )
+      );
+    })
+
+  : [];
   const routeCoordinates = [
   {
     latitude: 22.5726,
@@ -117,15 +174,39 @@ const [buses, setBuses] =
         </View>
 
         {/* SEARCH CARD */}
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>
-            Search Route
-          </Text>
+      <View style={styles.card}>
 
-          <Text style={styles.cardText}>
-            Find buses and live routes
-          </Text>
-        </View>
+  <Text style={styles.cardTitle}>
+    Search Route
+  </Text>
+
+  <TextInput
+    placeholder="From Station"
+    value={from}
+    onChangeText={setFrom}
+    style={styles.searchInput}
+    placeholderTextColor="#999"
+  />
+
+  <TextInput
+    placeholder="To Station"
+    value={to}
+    onChangeText={setTo}
+    style={styles.searchInput}
+    placeholderTextColor="#999"
+  />
+
+  <TouchableOpacity
+  style={styles.searchButton}
+  onPress={() => setSearched(true)}>
+
+  <Text style={styles.searchButtonText}>
+    Search Buses
+  </Text>
+
+</TouchableOpacity>
+
+</View>
 
         {/* MAP */}
         <View style={styles.mapContainer}>
@@ -146,7 +227,7 @@ const [buses, setBuses] =
             strokeColor="#007BFF"
           />  
 
-            {buses.map(bus => (
+          {filteredBuses.map(bus => (
 
           <Marker
             key={bus.id}
@@ -162,9 +243,9 @@ const [buses, setBuses] =
 
 ))}
 
-          </MapView>
+</MapView>
 
-          {selectedBus && (
+   {selectedBus && (
 
   <View style={styles.liveCard}>
 
@@ -301,10 +382,44 @@ liveBusTitle: {
   marginBottom: 8,
 },
 
+searchInput: {
+  backgroundColor: '#F3F4F6',
+
+  borderRadius: 12,
+
+  paddingHorizontal: 15,
+
+  paddingVertical: 12,
+
+  marginTop: 10,
+
+  fontSize: 16,
+},
+
 liveText: {
   color: COLORS.gray,
 
   marginBottom: 4,
+},
+
+searchButton: {
+  backgroundColor: COLORS.primary,
+
+  marginTop: 15,
+
+  paddingVertical: 14,
+
+  borderRadius: 14,
+
+  alignItems: 'center',
+},
+
+searchButtonText: {
+  color: COLORS.white,
+
+  fontWeight: 'bold',
+
+  fontSize: 16,
 },
 
   section: {
