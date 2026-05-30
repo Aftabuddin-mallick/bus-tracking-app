@@ -10,6 +10,7 @@ import {
 
 import MapView, {
   Marker,
+  Polyline,
 } from 'react-native-maps';
 
 import {COLORS} from '../../ui/theme/colors';
@@ -45,6 +46,32 @@ const [buses, setBuses] =
       title: 'WB-01A-9999',
     },
   ]);
+
+  const [selectedBus, setSelectedBus] =
+  React.useState<any>(null);
+
+  const routeCoordinates = [
+  {
+    latitude: 22.5726,
+    longitude: 88.3639,
+  },
+
+  {
+    latitude: 22.5826,
+    longitude: 88.3739,
+  },
+
+  {
+    latitude: 22.5926,
+    longitude: 88.3839,
+  },
+
+  {
+    latitude: 22.6026,
+    longitude: 88.3939,
+  },
+];
+
    React.useEffect(() => {
 
   const interval = setInterval(() => {
@@ -112,6 +139,13 @@ const [buses, setBuses] =
               longitudeDelta: 0.05,
             }}>
 
+
+          <Polyline
+            coordinates={routeCoordinates}
+            strokeWidth={5}
+            strokeColor="#007BFF"
+          />  
+
             {buses.map(bus => (
 
           <Marker
@@ -123,11 +157,36 @@ const [buses, setBuses] =
             title={bus.title}
             description="Live Bus Tracking"
             image={busIcon}
+            onPress={() => setSelectedBus(bus)}
           />
 
 ))}
 
           </MapView>
+
+          {selectedBus && (
+
+  <View style={styles.liveCard}>
+
+    <Text style={styles.liveBusTitle}>
+      {selectedBus.title}
+    </Text>
+
+    <Text style={styles.liveText}>
+      ETA: 5 mins
+    </Text>
+
+    <Text style={styles.liveText}>
+      Route: Howrah → Salt Lake
+    </Text>
+
+    <Text style={styles.liveText}>
+      Status: On Time
+    </Text>
+
+  </View>
+
+)}
 
         </View>
 
@@ -219,6 +278,34 @@ const styles = StyleSheet.create({
   map: {
     flex: 1,
   },
+
+  liveCard: {
+  backgroundColor: COLORS.white,
+
+  marginHorizontal: SPACING.lg,
+
+  padding: SPACING.lg,
+
+  borderRadius: 18,
+
+  marginTop: SPACING.md,
+
+  elevation: 5,
+},
+
+liveBusTitle: {
+  fontSize: TYPOGRAPHY.heading,
+
+  fontWeight: 'bold',
+
+  marginBottom: 8,
+},
+
+liveText: {
+  color: COLORS.gray,
+
+  marginBottom: 4,
+},
 
   section: {
     paddingHorizontal: SPACING.lg,
