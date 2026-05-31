@@ -181,15 +181,27 @@ const filteredBuses = searched
         showsVerticalScrollIndicator={false}>
 
         {/* HEADER */}
-        <View style={styles.header}>
-          <Text style={styles.greeting}>
-            Hello 👋
-          </Text>
+       <View style={styles.header}>
 
-          <Text style={styles.title}>
-            Track Your Bus
-          </Text>
-        </View>
+  <View>
+
+    <Text style={styles.greeting}>
+      Welcome Back 👋
+    </Text>
+
+    <Text style={styles.title}>
+      Bus Tracking System
+    </Text>
+
+  </View>
+
+  <View style={styles.profileCircle}>
+    <Text style={styles.profileText}>
+      A
+    </Text>
+  </View>
+
+</View>
 
       <SearchCard
   from={from}
@@ -248,6 +260,11 @@ const filteredBuses = searched
 
     <Text style={styles.liveBusTitle}>
       {selectedBus.title}
+      <View style={styles.statusBadge}>
+  <Text style={styles.statusText}>
+    LIVE
+  </Text>
+</View>
     </Text>
 
    <Text style={styles.liveText}>
@@ -290,35 +307,6 @@ const filteredBuses = searched
 
         </View>
 
-        {/* BUSES */}
-        <View style={styles.section}>
-
-          <Text style={styles.sectionTitle}>
-            Nearby Buses
-          </Text>
-
-          <View style={styles.busCard}>
-            <Text style={styles.busName}>
-              Bus WB-01A-1234
-            </Text>
-
-            <Text style={styles.busEta}>
-              Arriving in 5 mins
-            </Text>
-          </View>
-
-          <View style={styles.busCard}>
-            <Text style={styles.busName}>
-              Bus WB-01A-5678
-            </Text>
-
-            <Text style={styles.busEta}>
-              Arriving in 12 mins
-            </Text>
-          </View>
-
-        </View>
-
       </ScrollView>
 
     </SafeAreaView>
@@ -329,24 +317,59 @@ const filteredBuses = searched
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
+    backgroundColor: '#F3F4F6',
   },
 
-  header: {
-    padding: SPACING.lg,
-  },
+header: {
+  flexDirection: 'row',
 
-  greeting: {
-    fontSize: TYPOGRAPHY.body,
-    color: COLORS.gray,
-  },
+  justifyContent: 'space-between',
 
-  title: {
-    fontSize: TYPOGRAPHY.title,
-    fontWeight: 'bold',
-    color: COLORS.black,
-    marginTop: 4,
-  },
+  alignItems: 'center',
+
+  padding: SPACING.lg,
+},
+
+greeting: {
+  fontSize: 16,
+
+  color: '#6B7280',
+},
+
+title: {
+  fontSize: 28,
+
+  fontWeight: 'bold',
+
+  color: '#111827',
+
+  marginTop: 4,
+},
+
+profileCircle: {
+  width: 50,
+
+  height: 50,
+
+  borderRadius: 25,
+
+  backgroundColor: '#2563EB',
+
+  justifyContent: 'center',
+
+  alignItems: 'center',
+
+  elevation: 5,
+},
+
+profileText: {
+  color: 'white',
+
+  fontSize: 20,
+
+  fontWeight: 'bold',
+},
+
 
   card: {
     backgroundColor: COLORS.white,
@@ -367,36 +390,61 @@ const styles = StyleSheet.create({
     color: COLORS.gray,
   },
 
-  mapContainer: {
-    height: 250,
-    marginHorizontal: SPACING.lg,
-    borderRadius: 20,
-    overflow: 'hidden',
-    marginBottom: SPACING.xl,
-  },
+mapContainer: {
+  height: 320,
+
+  marginHorizontal: SPACING.lg,
+
+  borderRadius: 30,
+
+  overflow: 'hidden',
+
+  marginBottom: SPACING.xl,
+
+  elevation: 8,
+
+  backgroundColor: '#fff',
+},
 
   map: {
     flex: 1,
   },
 
-  liveCard: {
-  backgroundColor: COLORS.white,
+liveCard: {
+  position: 'absolute',
 
-  marginHorizontal: SPACING.lg,
+  bottom: 15,
+
+  left: 15,
+
+  right: 15,
+
+  backgroundColor: '#FFFFFF',
 
   padding: SPACING.lg,
 
-  borderRadius: 18,
+  borderRadius: 24,
 
-  marginTop: SPACING.md,
+  elevation: 10,
 
-  elevation: 5,
+  shadowColor: '#000',
+
+  shadowOpacity: 0.15,
+
+  shadowRadius: 10,
+
+  shadowOffset: {
+    width: 0,
+    height: 4,
+  },
 },
 
 liveBusTitle: {
-  fontSize: TYPOGRAPHY.heading,
+  fontSize: 22,
 
   fontWeight: 'bold',
+
+  color: '#111827',
 
   marginBottom: 8,
 },
@@ -416,9 +464,11 @@ searchInput: {
 },
 
 liveText: {
-  color: COLORS.gray,
+  color: '#4B5563',
 
-  marginBottom: 4,
+  marginBottom: 6,
+
+  fontSize: 15,
 },
 
 searchButton: {
@@ -459,6 +509,28 @@ searchButtonText: {
     marginBottom: SPACING.md,
     elevation: 3,
   },
+
+  statusBadge: {
+  backgroundColor: '#DCFCE7',
+
+  alignSelf: 'flex-start',
+
+  paddingHorizontal: 12,
+
+  paddingVertical: 5,
+
+  borderRadius: 20,
+
+  marginBottom: 10,
+},
+
+statusText: {
+  color: '#16A34A',
+
+  fontWeight: 'bold',
+
+  fontSize: 12,
+},
 
   busName: {
     fontSize: TYPOGRAPHY.body,
