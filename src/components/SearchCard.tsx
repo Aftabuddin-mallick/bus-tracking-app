@@ -61,18 +61,35 @@ export default function SearchCard({
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: COLORS.white,
+  position: 'absolute',
 
-    marginHorizontal: SPACING.lg,
+  top: 20,
 
-    padding: SPACING.lg,
+  left: 20,
 
-    borderRadius: 18,
+  right: 20,
 
-    marginBottom: SPACING.lg,
+  zIndex: 999,
 
-    elevation: 4,
+  backgroundColor: 'rgba(255,255,255,0.96)',
+
+  padding: 18,
+
+  borderRadius: 26,
+
+  elevation: 12,
+
+  shadowColor: '#000',
+
+  shadowOpacity: 0.12,
+
+  shadowRadius: 12,
+
+  shadowOffset: {
+    width: 0,
+    height: 4,
   },
+},
 
   cardTitle: {
     fontSize: TYPOGRAPHY.heading,

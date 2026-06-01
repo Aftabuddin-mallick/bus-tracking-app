@@ -5,7 +5,6 @@ import {
   Text,
   StyleSheet,
   SafeAreaView,
-  ScrollView,
   TextInput,
   TouchableOpacity,
 } from 'react-native';
@@ -94,6 +93,9 @@ const [buses, setBuses] =
   const [searched, setSearched] =
   React.useState(false);
 
+  const [showSearchCard, setShowSearchCard] =
+  React.useState(true);
+
   // const [search, setSearch] =
   // React.useState('');
 
@@ -177,58 +179,96 @@ const filteredBuses = searched
   return (
     <SafeAreaView style={styles.container}>
 
-      <ScrollView
-        showsVerticalScrollIndicator={false}>
-
         {/* HEADER */}
-       <View style={styles.header}>
+      <View style={styles.header}>
 
-  <View>
+  <View style={styles.headerTop}>
 
-    <Text style={styles.greeting}>
-      Welcome Back 👋
-    </Text>
+    <View>
 
-    <Text style={styles.title}>
-      Bus Tracking System
-    </Text>
+      <Text style={styles.headerMiniText}>
+        Smart Transit
+      </Text>
+
+      <Text style={styles.headerTitle}>
+        Bus Tracking
+      </Text>
+
+      <Text style={styles.headerSubtitle}>
+        Real-time route intelligence
+      </Text>
+
+    </View>
+
+    <View style={styles.profileCircle}>
+      <Text style={styles.profileText}>
+        A
+      </Text>
+    </View>
 
   </View>
 
-  <View style={styles.profileCircle}>
-    <Text style={styles.profileText}>
-      A
+  <View style={styles.liveBadge}>
+
+    <View style={styles.liveDot} />
+
+    <Text style={styles.liveBadgeText}>
+      LIVE TRACKING ACTIVE
     </Text>
+
   </View>
 
 </View>
 
-      <SearchCard
+
+        {/* MAP */}
+        <View style={styles.mapContainer}>
+
+{showSearchCard && (
+
+<SearchCard
   from={from}
   to={to}
   setFrom={setFrom}
   setTo={setTo}
   onSearch={() => {
 
+  if (!from.trim() || !to.trim()) {
+    return;
+  }
+
   setSelectedBus(null);
 
   setSearched(true);
+
+  setShowSearchCard(false);
 }}
 />
 
-
-        {/* MAP */}
-        <View style={styles.mapContainer}>
+)}
 
           <MapView
-            style={styles.map}
+
+            scrollEnabled={true}
+            zoomEnabled={true}
+            rotateEnabled={true}
+            pitchEnabled={true}
+            moveOnMarkerPress={false}
+
+
+            
+
+
+
+           style={[styles.map, {flex: 1}]}
               initialRegion={{
               latitude: 22.5726,
               longitude: 88.3639,
               latitudeDelta: 0.05,
               longitudeDelta: 0.05,
             }}>
-
+            
+            {/* <View style={styles.mapShade} /> */}
 
           <Polyline
             coordinates={routeCoordinates}
@@ -254,18 +294,64 @@ const filteredBuses = searched
 
 </MapView>
 
+
+{!showSearchCard && (
+
+<TouchableOpacity
+  style={styles.floatingSearchButton}
+
+  onPress={() => setShowSearchCard(true)}>
+
+  <Text style={styles.floatingSearchText}>
+    🔍 Search Again
+  </Text>
+
+</TouchableOpacity>
+
+)}
+
+  {searched && filteredBuses.length === 0 && (
+
+<View style={styles.noBusCard}>
+
+  <Text style={styles.noBusText}>
+    No buses found for this route
+  </Text>
+
+  <TouchableOpacity
+    onPress={() => setShowSearchCard(true)}>
+
+    <Text style={styles.tryAgainText}>
+      Search Again
+    </Text>
+
+  </TouchableOpacity>
+
+</View>
+
+)}
+
+  <View style={styles.locationButton}>
+
+    <Text style={styles.locationIcon}>
+      📍
+   </Text>
+
+  </View>
+
    {selectedBus && (
 
   <View style={styles.liveCard}>
 
-    <Text style={styles.liveBusTitle}>
-      {selectedBus.title}
-      <View style={styles.statusBadge}>
+      <Text style={styles.liveBusTitle}>
+  {selectedBus.title}
+</Text>
+
+<View style={styles.statusBadge}>
   <Text style={styles.statusText}>
     LIVE
   </Text>
 </View>
-    </Text>
 
    <Text style={styles.liveText}>
   Current Stop:
@@ -307,8 +393,6 @@ const filteredBuses = searched
 
         </View>
 
-      </ScrollView>
-
     </SafeAreaView>
   );
   
@@ -317,68 +401,140 @@ const filteredBuses = searched
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F3F4F6',
+    backgroundColor: '#EEF2FF',
   },
 
+
 header: {
+  backgroundColor: '#111827',
+
+  marginBottom: 20,
+
+  paddingTop: 25,
+
+  paddingBottom: 30,
+
+  paddingHorizontal: 25,
+
+  borderBottomLeftRadius: 35,
+
+  borderBottomRightRadius: 35,
+},
+
+headerTop: {
   flexDirection: 'row',
 
   justifyContent: 'space-between',
 
   alignItems: 'center',
-
-  padding: SPACING.lg,
 },
 
-greeting: {
-  fontSize: 16,
+headerMiniText: {
+  color: '#9CA3AF',
 
-  color: '#6B7280',
+  fontSize: 14,
+
+  marginBottom: 6,
 },
 
-title: {
-  fontSize: 28,
+headerTitle: {
+  color: 'white',
+
+  fontSize: 34,
 
   fontWeight: 'bold',
+},
 
-  color: '#111827',
+headerSubtitle: {
+  color: '#D1D5DB',
 
-  marginTop: 4,
+  marginTop: 5,
+
+  fontSize: 15,
 },
 
 profileCircle: {
-  width: 50,
+  width: 55,
 
-  height: 50,
+  height: 55,
 
-  borderRadius: 25,
+  borderRadius: 28,
 
   backgroundColor: '#2563EB',
 
   justifyContent: 'center',
 
   alignItems: 'center',
-
-  elevation: 5,
 },
 
 profileText: {
   color: 'white',
 
-  fontSize: 20,
+  fontSize: 22,
 
   fontWeight: 'bold',
 },
 
+liveBadge: {
+  marginTop: 22,
 
-  card: {
-    backgroundColor: COLORS.white,
-    marginHorizontal: SPACING.lg,
-    padding: SPACING.lg,
-    borderRadius: 18,
-    marginBottom: SPACING.lg,
-    elevation: 4,
+  backgroundColor: 'rgba(255,255,255,0.08)',
+
+  paddingVertical: 12,
+
+  paddingHorizontal: 16,
+
+  borderRadius: 18,
+
+  flexDirection: 'row',
+
+  alignItems: 'center',
+},
+
+liveDot: {
+  width: 10,
+
+  height: 10,
+
+  borderRadius: 5,
+
+  backgroundColor: '#22C55E',
+
+  marginRight: 10,
+},
+
+liveBadgeText: {
+  color: 'white',
+
+  fontWeight: '600',
+
+  letterSpacing: 0.5,
+},
+
+ card: {
+  backgroundColor: '#FFFFFF',
+
+  marginHorizontal: SPACING.lg,
+
+  padding: SPACING.lg,
+
+  borderRadius: 28,
+
+  marginBottom: SPACING.lg,
+
+  elevation: 8,
+
+  shadowColor: '#000',
+
+  shadowOpacity: 0.08,
+
+  shadowRadius: 10,
+
+  shadowOffset: {
+    width: 0,
+    height: 4,
   },
+},
 
   cardTitle: {
     fontSize: TYPOGRAPHY.heading,
@@ -391,19 +547,61 @@ profileText: {
   },
 
 mapContainer: {
-  height: 320,
+  flex: 1,
 
   marginHorizontal: SPACING.lg,
 
-  borderRadius: 30,
+  borderRadius: 35,
+
+  backgroundColor: '#fff',
+
+  marginBottom: 20,
 
   overflow: 'hidden',
 
-  marginBottom: SPACING.xl,
+  elevation: 8,
+},
+
+mapShade: {
+  position: 'absolute',
+
+  top: 0,
+  bottom: 0,
+  left: 0,
+  right: 0,
+
+  backgroundColor: 'rgba(0,0,0,0.05)',
+
+  zIndex: 1,
+
+  pointerEvents: 'none',
+},
+
+
+locationButton: {
+  position: 'absolute',
+
+  bottom: 25,
+
+  right: 20,
+
+  width: 55,
+
+  height: 55,
+
+  borderRadius: 28,
+
+  backgroundColor: 'white',
+
+  justifyContent: 'center',
+
+  alignItems: 'center',
 
   elevation: 8,
+},
 
-  backgroundColor: '#fff',
+locationIcon: {
+  fontSize: 24,
 },
 
   map: {
@@ -439,6 +637,40 @@ liveCard: {
   },
 },
 
+noBusCard: {
+  position: 'absolute',
+
+  bottom: 20,
+
+  left: 20,
+
+  right: 20,
+
+  backgroundColor: 'white',
+
+  padding: 18,
+
+  borderRadius: 20,
+
+  elevation: 8,
+},
+
+noBusText: {
+  fontWeight: 'bold',
+
+  fontSize: 16,
+
+  color: '#111827',
+
+  marginBottom: 8,
+},
+
+tryAgainText: {
+  color: '#2563EB',
+
+  fontWeight: 'bold',
+},
+
 liveBusTitle: {
   fontSize: 22,
 
@@ -450,17 +682,49 @@ liveBusTitle: {
 },
 
 searchInput: {
-  backgroundColor: '#F3F4F6',
+  backgroundColor: '#F9FAFB',
 
-  borderRadius: 12,
+  borderWidth: 1,
 
-  paddingHorizontal: 15,
+  borderColor: '#E5E7EB',
+
+  borderRadius: 18,
+
+  paddingHorizontal: 18,
+
+  paddingVertical: 14,
+
+  marginTop: 12,
+
+  fontSize: 16,
+
+  color: '#111827',
+},
+
+floatingSearchButton: {
+  position: 'absolute',
+
+  top: 20,
+
+  alignSelf: 'center',
+
+  backgroundColor: '#111827',
+
+  paddingHorizontal: 18,
 
   paddingVertical: 12,
 
-  marginTop: 10,
+  borderRadius: 30,
 
-  fontSize: 16,
+  zIndex: 999,
+
+  elevation: 10,
+},
+
+floatingSearchText: {
+  color: 'white',
+
+  fontWeight: 'bold',
 },
 
 liveText: {
@@ -472,15 +736,17 @@ liveText: {
 },
 
 searchButton: {
-  backgroundColor: COLORS.primary,
+  backgroundColor: '#2563EB',
 
-  marginTop: 15,
+  marginTop: 18,
 
-  paddingVertical: 14,
+  paddingVertical: 16,
 
-  borderRadius: 14,
+  borderRadius: 18,
 
   alignItems: 'center',
+
+  elevation: 5,
 },
 
 searchButtonText: {
@@ -488,7 +754,9 @@ searchButtonText: {
 
   fontWeight: 'bold',
 
-  fontSize: 16,
+  fontSize: 17,
+
+  letterSpacing: 0.5,
 },
 
   section: {
